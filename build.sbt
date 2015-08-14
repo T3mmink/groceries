@@ -8,4 +8,5 @@ resolvers += "ReactiveCouchbase Releases" at "https://raw.github.com/ReactiveCou
 resolvers += "Typesafe" at "http://repo.typesafe.com/typesafe/releases/"
 
 libraryDependencies ++= Seq(  "org.reactivecouchbase" %% "reactivecouchbase-core" % "0.3")
+libraryDependencies += "joda-time" % "joda-time" % "2.8.2"
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"

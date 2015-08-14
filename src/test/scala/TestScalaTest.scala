@@ -4,7 +4,7 @@
   class SetSpec extends FlatSpec {
 
     "An empty Set" should "have size 0" in {
-      assert(Set.empty.size == 0)
+      assert(Set.empty.size == 1)
     }
 
     it should "produce NoSuchElementException when head is invoked" in {
