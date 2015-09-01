@@ -1,0 +1,15 @@
+boodschappen lijst maken
+
+gui ->      - button nieuw lijst
+            - toevoegen ingredienten
+            - submit
+
+backend ->  - absorb rest call
+            - maak boodschappenlijst object aan
+            - sla op in database
+
+
+testen      - json inschieten op json layer en controleren
+            - omzetten naar json en terug werkt?
+            - opslaan json in database
+

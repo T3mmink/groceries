@@ -37,5 +37,5 @@ object Boot extends App {
 class ControllerActor extends Actor with Controller with ActorLogging {
   def actorRefFactory = context
   val groceriesActor = actorRefFactory.actorOf(Props[GroceriesActor], "groceries")
-  def receive = runRoute( groceriesRoute(groceriesActor ))
+  def receive = runRoute( groceriesRoute(groceriesActor))
 }
