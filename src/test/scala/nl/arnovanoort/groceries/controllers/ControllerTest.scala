@@ -21,16 +21,26 @@ class ControllerTest extends FlatSpec with Matchers with ScalatestRouteTest with
 
   "Posting a new groceryList" should "blabla" in {
     val testGroceryList = """
-      {"list":{
-        "aardappels":{
-          "hoeveelheid":2,
-          "eenheid":"stuks"
+      {"groceries":
+      [
+        {
+          "grocery":
+          {
+            "name":"aardappels",
+            "hoeveelheid":2,
+            "eenheid":"stuks"
+          }
         },
-        "pindakaas":{
-          "hoeveelheid":1,
-          "eenheid":"pot"
-        }}
-      ,"date":"01-01-2011"
+        {
+          "grocery":
+          {
+            "name":"peanutbutter",
+            "hoeveelheid":1,
+            "eenheid":"pot"
+          }
+        }
+      ]
+      ,"date":"2015-09-03"
       }
       """ //+ new DateTime() + """"} """
 

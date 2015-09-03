@@ -24,7 +24,7 @@ import org.json4s.native.JsonMethods._
 trait Controller extends HttpService {
 
   import EventsService._
-  import EventsService.EventFormatter._
+  import EventsService.GroceryListFormatter._
   //  import Json4sProtocol._
   import org.json4s.ext.JodaTimeSerializers._
 
@@ -59,18 +59,23 @@ object EventsService extends DefaultJsonProtocol with SprayJsonSupport {
   }
   //  implicit val groceryListFormat = jsonFormat2(GroceryList)
 
-  implicit object EventFormatter extends RootJsonFormat[GroceryList] with DateFormatter with DateParser {
+  implicit object GroceryListFormatter extends RootJsonFormat[GroceryList] with DateFormatter with DateParser {
     def read(json: JsValue): GroceryList = json match{
 //      case obj: JsObject =>{
 //        System.out.println("JSOBJECT" + obj)
-        case JsObject(list) =>{
+        case JsObject(map) =>{
 //        case JsArray(Vector(JsString(list), JsString(date))) =>{
-          System.out.println("JSOBJECT" + list)
-          System.out.println("JSOBJECT2" + list("list"))
-          System.out.println("JSOBJECT3" + list("date"))
+          System.out.println("JSOBJECT" + map)
+          System.out.println("JSOBJECT3" + map("date"))
+          val tmp: JsString = map("date").asInstanceOf[JsString]
+          val str:String = map("date").convertTo[String] //toString()
+          val date = new LocalDate(str)
 
-          val date = new LocalDate()
-          System.out.println("datetime1" + date)
+          System.out.println("datetime1" + str)
+          val list = map("groceries")
+          System.out.println("LIST" + list)
+          list.convertTo[List[Grocery]]
+//          map("list").convertTo[List[Grocery]]
 
           //          System.out.println("JSOBJECT2" + obj("list"))
 
