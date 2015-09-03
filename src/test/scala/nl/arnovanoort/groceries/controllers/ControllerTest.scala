@@ -1,8 +1,8 @@
 package nl.arnovanoort.groceries.controllers
 
 import akka.testkit.TestProbe
-import org.joda.time.DateTime
-import org.joda.time.format.ISODateTimeFormat
+import org.joda.time.{LocalDate, DateTime}
+import org.joda.time.format.{DateTimeFormatter, ISODateTimeFormat}
 import org.scalatest.{Matchers, FlatSpec}
 import spray.http.{ContentTypes, HttpEntity}
 import spray.testkit.ScalatestRouteTest
@@ -30,9 +30,19 @@ class ControllerTest extends FlatSpec with Matchers with ScalatestRouteTest with
           "hoeveelheid":1,
           "eenheid":"pot"
         }}
-      ,"dateTime":"01-01-2011"
+      ,"date":"01-01-2011"
       }
       """ //+ new DateTime() + """"} """
+
+    val date = new LocalDate()
+//    val patternFormat1: DateTimeFormatter  = DateTimeFormatter.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+//    val patternFormat2: DateTimeFormatter  = DateTimeFormatter.forPattern("yyyy-MM-dd'T'");
+    System.out.println("datetime1" + date)
+  ///    println("datetime2" + dateTime.toString(patternFormat1))
+////    println("datetime2" + dateTime.toString(patternFormat2))
+//    val formatter = ISODateTimeFormat.dateTimeNoMillis()
+//    val parser = ISODateTimeFormat.dateTimeNoMillis().withOffsetParsed()
+
 
     val mockedActor = TestProbe().ref
     Post("/list", HttpEntity(ContentTypes.`application/json`, testGroceryList)) ~> groceriesRoute(mockedActor) ~> check {

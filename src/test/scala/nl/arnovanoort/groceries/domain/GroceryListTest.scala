@@ -1,6 +1,6 @@
 package nl.arnovanoort.groceries.domain
 
-import org.joda.time.DateTime
+import org.joda.time.{LocalDate, DateTime}
 import org.scalatest.FlatSpec
 
 /**
@@ -10,18 +10,18 @@ class GroceryListTest extends FlatSpec{
 
   "a new Grocery list" should "contain its groceries" in {
 
-    val dateTime = new DateTime()
+    val date = new LocalDate()
     val groceries = List("Peanutbutter", "Salami")
-    val groceryListUnderTest = GroceryListTest.createTestGroceryList(dateTime, groceries)
+    val groceryListUnderTest = GroceryListTest.createTestGroceryList(date, groceries)
     assert(groceryListUnderTest.list.head.name == groceries(0))
-    assert(groceryListUnderTest.dateTime == dateTime)
+    assert(groceryListUnderTest.date == date)
   }
 
 }
 object GroceryListTest{
-  def createTestGroceryList(dateTime: DateTime, groceries: List[String]): GroceryList = {
+  def createTestGroceryList(date: LocalDate, groceries: List[String]): GroceryList = {
     val list = GroceryListTest.createListOfGroceries(groceries)
-    new GroceryList(list,dateTime)
+    new GroceryList(list,date)
   }
 
   def createListOfGroceries(groceries: List[String]): List[Grocery] = groceries match{

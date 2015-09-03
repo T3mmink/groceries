@@ -1,5 +1,5 @@
 package nl.arnovanoort.groceries.domain
 
-import org.joda.time.DateTime
+import org.joda.time.{LocalDate}
 
-case class GroceryList(list: List[Grocery], dateTime: DateTime)
+case class GroceryList(list: List[Grocery], date: LocalDate)

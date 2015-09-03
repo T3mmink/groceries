@@ -2,7 +2,7 @@ package nl.arnovanoort.groceries.controllers
 
 import akka.actor.{Props, ActorRef}
 import nl.arnovanoort.groceries.domain.{Grocery, GroceryList}
-import org.joda.time.DateTime
+import org.joda.time.{LocalDate, DateTime}
 import org.joda.time.format.{DateTimeFormatter, ISODateTimeFormat}
 import org.json4s.{DefaultFormats, Formats}
 import spray.http.StatusCodes
@@ -23,9 +23,9 @@ import org.json4s.native.JsonMethods._
 
 trait Controller extends HttpService {
 
-           import EventsService._
-            import EventsService.EventFormatter._
-//  import Json4sProtocol._
+  import EventsService._
+  import EventsService.EventFormatter._
+  //  import Json4sProtocol._
   import org.json4s.ext.JodaTimeSerializers._
 
 
@@ -57,29 +57,38 @@ object EventsService extends DefaultJsonProtocol with SprayJsonSupport {
   trait DateParser {
     val parser: DateTimeFormatter
   }
-//  implicit val groceryListFormat = jsonFormat2(GroceryList)
+  //  implicit val groceryListFormat = jsonFormat2(GroceryList)
 
   implicit object EventFormatter extends RootJsonFormat[GroceryList] with DateFormatter with DateParser {
-    def read(json: JsValue): GroceryList = {
-      System.out.println("STARTS 1")
-            json match {
-              case obj: JsObject =>
-                System.out.println("JSOBJECT" + obj)
+    def read(json: JsValue): GroceryList = json match{
+//      case obj: JsObject =>{
+//        System.out.println("JSOBJECT" + obj)
+        case JsObject(list) =>{
+//        case JsArray(Vector(JsString(list), JsString(date))) =>{
+          System.out.println("JSOBJECT" + list)
+          System.out.println("JSOBJECT2" + list("list"))
+          System.out.println("JSOBJECT3" + list("date"))
 
-      //          //          val name = obj.fields.get("name").map(_.asInstanceOf[JsString].value).
-      //          //            getOrElse(deserializationError("field name not present"))
-      //          //          val city = obj.fields.get("city").map(_.asInstanceOf[JsString].value).
-      //          //            getOrElse(deserializationError("field city not present"))
-      //          val starts = obj.fields.get("dateTime").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
-      //            getOrElse(new DateTime())
-      //          System.out.println("STARTS" + starts)
-      //          //          val ends = obj.fields.get("ends").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
-      //          //            getOrElse(deserializationError("ends field not present"))
-      //          GroceryList(List[Grocery](), starts)
-      //        //        case _ => deserializationError("wrong object to deserialize")
-            }
+          val date = new LocalDate()
+          System.out.println("datetime1" + date)
+
+          //          System.out.println("JSOBJECT2" + obj("list"))
+
+
+        //          //          val name = obj.fields.get("name").map(_.asInstanceOf[JsString].value).
+        //          //            getOrElse(deserializationError("field name not present"))
+        //          //          val city = obj.fields.get("city").map(_.asInstanceOf[JsString].value).
+        //          //            getOrElse(deserializationError("field city not present"))
+        //          val starts = obj.fields.get("dateTime").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
+        //            getOrElse(new DateTime())
+        //          System.out.println("STARTS" + starts)
+        //          //          val ends = obj.fields.get("ends").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
+        //          //            getOrElse(deserializationError("ends field not present"))
+        //          GroceryList(List[Grocery](), starts)
+        //        //        case _ => deserializationError("wrong object to deserialize")
+      }
       val grocery = Grocery("Grocery list is being processed")
-      GroceryList(List[Grocery](grocery), new DateTime())
+      GroceryList(List[Grocery](grocery), new LocalDate())
     }
 
     def write(e: GroceryList): JsValue =
@@ -87,7 +96,7 @@ object EventsService extends DefaultJsonProtocol with SprayJsonSupport {
         "dateTime" -> JsString("blabalala")
         //          "list" -> JsString(e.list),
         //          "date" -> JsString(e.dateTime)
-      ))o 
+      ))
 
     val formatter = ISODateTimeFormat.dateTimeNoMillis()
     val parser = ISODateTimeFormat.dateTimeNoMillis().withOffsetParsed()
@@ -129,36 +138,36 @@ object EventsService extends DefaultJsonProtocol with SprayJsonSupport {
    */
 
 
-//  implicit object EventFormatter extends RootJsonFormat[GroceryList] with DateFormatter with DateParser {
-//    def read(json: JsValue): GroceryList = {
-//      System.out.println("STARTS 1")
-//      json match {
-//        case obj: JsObject =>
-//          System.out.println("JSOBJECT" + obj)
-//          //          val name = obj.fields.get("name").map(_.asInstanceOf[JsString].value).
-//          //            getOrElse(deserializationError("field name not present"))
-//          //          val city = obj.fields.get("city").map(_.asInstanceOf[JsString].value).
-//          //            getOrElse(deserializationError("field city not present"))
-//          val starts = obj.fields.get("dateTime").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
-//            getOrElse(new DateTime())
-//          System.out.println("STARTS" + starts)
-//          //          val ends = obj.fields.get("ends").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
-//          //            getOrElse(deserializationError("ends field not present"))
-//          GroceryList(List[Grocery](), starts)
-//        //        case _ => deserializationError("wrong object to deserialize")
-//      }
-//    }
-//
-//    def write(e: GroceryList): JsValue =
-//      JsObject(Map(
-//        "dateTime" -> JsString("blabalala")
-//        //          "list" -> JsString(e.list),
-//        //          "date" -> JsString(e.dateTime)
-//      ))
-//
-//    val formatter = ISODateTimeFormat.dateTimeNoMillis()
-//    val parser = ISODateTimeFormat.dateTimeNoMillis().withOffsetParsed()
-//  }
+  //  implicit object EventFormatter extends RootJsonFormat[GroceryList] with DateFormatter with DateParser {
+  //    def read(json: JsValue): GroceryList = {
+  //      System.out.println("STARTS 1")
+  //      json match {
+  //        case obj: JsObject =>
+  //          System.out.println("JSOBJECT" + obj)
+  //          //          val name = obj.fields.get("name").map(_.asInstanceOf[JsString].value).
+  //          //            getOrElse(deserializationError("field name not present"))
+  //          //          val city = obj.fields.get("city").map(_.asInstanceOf[JsString].value).
+  //          //            getOrElse(deserializationError("field city not present"))
+  //          val starts = obj.fields.get("dateTime").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
+  //            getOrElse(new DateTime())
+  //          System.out.println("STARTS" + starts)
+  //          //          val ends = obj.fields.get("ends").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
+  //          //            getOrElse(deserializationError("ends field not present"))
+  //          GroceryList(List[Grocery](), starts)
+  //        //        case _ => deserializationError("wrong object to deserialize")
+  //      }
+  //    }
+  //
+  //    def write(e: GroceryList): JsValue =
+  //      JsObject(Map(
+  //        "dateTime" -> JsString("blabalala")
+  //        //          "list" -> JsString(e.list),
+  //        //          "date" -> JsString(e.dateTime)
+  //      ))
+  //
+  //    val formatter = ISODateTimeFormat.dateTimeNoMillis()
+  //    val parser = ISODateTimeFormat.dateTimeNoMillis().withOffsetParsed()
+  //  }
 
 
   /*
