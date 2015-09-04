@@ -12,11 +12,6 @@ import spray.routing.HttpService
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
-
-//object Json4sProtocol extends Json4sSupport {
-//  implicit def json4sFormats: Formats = DefaultFormats
-//}
-
 /**
  * Created by temmink on 25-8-15.
  */
@@ -35,11 +30,11 @@ trait Controller extends HttpService {
         respondWithStatus(StatusCodes.Created) {
 
           entity(as[GroceryList]) {
-            value => System.out.println(value.list(0).name)
-              System.out.println("yessss...._")
-              actor ! "bla"
+            groceryList =>{
+              actor ! Create(groceryList)
               complete {
                 "Grocery list is being processed"
+              }
               }
           }
         }
@@ -59,41 +54,16 @@ object EventsService extends DefaultJsonProtocol with SprayJsonSupport {
   }
   //  implicit val groceryListFormat = jsonFormat2(GroceryList)
 
-  implicit object GroceryListFormatter extends RootJsonFormat[GroceryList] with DateFormatter with DateParser {
+  implicit val colorFormat = jsonFormat3(Grocery)
+
+  implicit object GroceryListFormatter extends RootJsonFormat[GroceryList]  {
     def read(json: JsValue): GroceryList = json match{
-//      case obj: JsObject =>{
-//        System.out.println("JSOBJECT" + obj)
-        case JsObject(map) =>{
-//        case JsArray(Vector(JsString(list), JsString(date))) =>{
-          System.out.println("JSOBJECT" + map)
-          System.out.println("JSOBJECT3" + map("date"))
-          val tmp: JsString = map("date").asInstanceOf[JsString]
-          val str:String = map("date").convertTo[String] //toString()
-          val date = new LocalDate(str)
+        case JsObject(jsonMap) => {
+          val dateStr: String = jsonMap("date").convertTo[String]
+          val groceries: List[Grocery] = jsonMap("groceries").convertTo[List[Grocery]]
 
-          System.out.println("datetime1" + str)
-          val list = map("groceries")
-          System.out.println("LIST" + list)
-          list.convertTo[List[Grocery]]
-//          map("list").convertTo[List[Grocery]]
-
-          //          System.out.println("JSOBJECT2" + obj("list"))
-
-
-        //          //          val name = obj.fields.get("name").map(_.asInstanceOf[JsString].value).
-        //          //            getOrElse(deserializationError("field name not present"))
-        //          //          val city = obj.fields.get("city").map(_.asInstanceOf[JsString].value).
-        //          //            getOrElse(deserializationError("field city not present"))
-        //          val starts = obj.fields.get("dateTime").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
-        //            getOrElse(new DateTime())
-        //          System.out.println("STARTS" + starts)
-        //          //          val ends = obj.fields.get("ends").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
-        //          //            getOrElse(deserializationError("ends field not present"))
-        //          GroceryList(List[Grocery](), starts)
-        //        //        case _ => deserializationError("wrong object to deserialize")
-      }
-      val grocery = Grocery("Grocery list is being processed")
-      GroceryList(List[Grocery](grocery), new LocalDate())
+          GroceryList(groceries, new LocalDate(dateStr))
+        }
     }
 
     def write(e: GroceryList): JsValue =
@@ -103,101 +73,8 @@ object EventsService extends DefaultJsonProtocol with SprayJsonSupport {
         //          "date" -> JsString(e.dateTime)
       ))
 
-    val formatter = ISODateTimeFormat.dateTimeNoMillis()
-    val parser = ISODateTimeFormat.dateTimeNoMillis().withOffsetParsed()
   }
 
-  /*
-    implicit object EventFormatter extends RootJsonFormat[GroceryList] with DateFormatter with DateParser {
-    def read(json: JsValue): GroceryList = {
-      System.out.println("STARTS 1")
-//      json match {
-//        case obj: JsObject =>
-//          System.out.println("JSOBJECT" + obj)
-//          //          val name = obj.fields.get("name").map(_.asInstanceOf[JsString].value).
-//          //            getOrElse(deserializationError("field name not present"))
-//          //          val city = obj.fields.get("city").map(_.asInstanceOf[JsString].value).
-//          //            getOrElse(deserializationError("field city not present"))
-//          val starts = obj.fields.get("dateTime").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
-//            getOrElse(new DateTime())
-//          System.out.println("STARTS" + starts)
-//          //          val ends = obj.fields.get("ends").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
-//          //            getOrElse(deserializationError("ends field not present"))
-//          GroceryList(List[Grocery](), starts)
-//        //        case _ => deserializationError("wrong object to deserialize")
-//      }
-      GroceryList(List[Grocery](), new DateTime())
-    }
-
-    def write(e: GroceryList): JsValue =
-      JsObject(Map(
-        "dateTime" -> JsString("blabalala")
-        //          "list" -> JsString(e.list),
-        //          "date" -> JsString(e.dateTime)
-      ))
-
-    val formatter = ISODateTimeFormat.dateTimeNoMillis()
-    val parser = ISODateTimeFormat.dateTimeNoMillis().withOffsetParsed()
-  }
-
-   */
-
-
-  //  implicit object EventFormatter extends RootJsonFormat[GroceryList] with DateFormatter with DateParser {
-  //    def read(json: JsValue): GroceryList = {
-  //      System.out.println("STARTS 1")
-  //      json match {
-  //        case obj: JsObject =>
-  //          System.out.println("JSOBJECT" + obj)
-  //          //          val name = obj.fields.get("name").map(_.asInstanceOf[JsString].value).
-  //          //            getOrElse(deserializationError("field name not present"))
-  //          //          val city = obj.fields.get("city").map(_.asInstanceOf[JsString].value).
-  //          //            getOrElse(deserializationError("field city not present"))
-  //          val starts = obj.fields.get("dateTime").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
-  //            getOrElse(new DateTime())
-  //          System.out.println("STARTS" + starts)
-  //          //          val ends = obj.fields.get("ends").map(x => parser.parseDateTime(x.asInstanceOf[JsString].value)).
-  //          //            getOrElse(deserializationError("ends field not present"))
-  //          GroceryList(List[Grocery](), starts)
-  //        //        case _ => deserializationError("wrong object to deserialize")
-  //      }
-  //    }
-  //
-  //    def write(e: GroceryList): JsValue =
-  //      JsObject(Map(
-  //        "dateTime" -> JsString("blabalala")
-  //        //          "list" -> JsString(e.list),
-  //        //          "date" -> JsString(e.dateTime)
-  //      ))
-  //
-  //    val formatter = ISODateTimeFormat.dateTimeNoMillis()
-  //    val parser = ISODateTimeFormat.dateTimeNoMillis().withOffsetParsed()
-  //  }
-
-
-  /*
-
-  class Color(val name: String, val red: Int, val green: Int, val blue: Int)
-
-object MyJsonProtocol extends DefaultJsonProtocol {
-  implicit object ColorJsonFormat extends RootJsonFormat[Color] {
-    def write(c: Color) =
-      JsArray(JsString(c.name), JsNumber(c.red), JsNumber(c.green), JsNumber(c.blue))
-
-    def read(value: JsValue) = value match {
-      case JsArray(Vector(JsString(name), JsNumber(red), JsNumber(green), JsNumber(blue))) =>
-        new Color(name, red.toInt, green.toInt, blue.toInt)
-      case _ => deserializationError("Color expected")
-    }
-  }
-}
-
-import MyJsonProtocol._
-
-val json = Color("CadetBlue", 95, 158, 160).toJson
-val color = json.convertTo[Color]
-
-   */
 }
 
 object Controller {

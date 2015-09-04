@@ -23,38 +23,23 @@ class ControllerTest extends FlatSpec with Matchers with ScalatestRouteTest with
     val testGroceryList = """
       {"groceries":
       [
-        {
-          "grocery":
           {
             "name":"aardappels",
-            "hoeveelheid":2,
-            "eenheid":"stuks"
-          }
-        },
-        {
-          "grocery":
+            "amount":2,
+            "unit":"stuks"
+          },
           {
             "name":"peanutbutter",
-            "hoeveelheid":1,
-            "eenheid":"pot"
+            "amount":1,
+            "unit":"pot"
           }
-        }
       ]
       ,"date":"2015-09-03"
       }
-      """ //+ new DateTime() + """"} """
-
-    val date = new LocalDate()
-//    val patternFormat1: DateTimeFormatter  = DateTimeFormatter.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-//    val patternFormat2: DateTimeFormatter  = DateTimeFormatter.forPattern("yyyy-MM-dd'T'");
-    System.out.println("datetime1" + date)
-  ///    println("datetime2" + dateTime.toString(patternFormat1))
-////    println("datetime2" + dateTime.toString(patternFormat2))
-//    val formatter = ISODateTimeFormat.dateTimeNoMillis()
-//    val parser = ISODateTimeFormat.dateTimeNoMillis().withOffsetParsed()
-
+      """
 
     val mockedActor = TestProbe().ref
+
     Post("/list", HttpEntity(ContentTypes.`application/json`, testGroceryList)) ~> groceriesRoute(mockedActor) ~> check {
       responseAs[String] should include("Grocery list is being processed")
       status should equal(spray.http.StatusCodes.Created)

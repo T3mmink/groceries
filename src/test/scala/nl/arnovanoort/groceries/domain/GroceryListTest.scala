@@ -25,7 +25,7 @@ object GroceryListTest{
   }
 
   def createListOfGroceries(groceries: List[String]): List[Grocery] = groceries match{
-    case x::xs => GroceryTest.createTestGrocery(x) :: createListOfGroceries(xs)
+    case x::xs => GroceryTest.createTestGrocery(x, 1, "someting") :: createListOfGroceries(xs)
     case Nil => List();
   }
 }

@@ -7,8 +7,13 @@ import nl.arnovanoort.groceries.domain.GroceryList
 /**
  * Created by temmink on 25-8-15.
  */
+
+case class Create(groceryList: GroceryList)
+
 class GroceriesActor extends Actor {
+
   override def receive: Receive = {
-    case GroceryList(list, date) => {}
+    case Create(groceryList:GroceryList) => {println(groceryList.list)}
+    case _ => {println("KON ER NIKS VAN MAKEN")}
   }
 }
