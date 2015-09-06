@@ -10,14 +10,8 @@ import spray.testkit.ScalatestRouteTest
 /**
  * Created by temmink on 25-8-15.
  */
-class ControllerTest extends FlatSpec with Matchers with ScalatestRouteTest with Controller {
+class RoutesTest extends FlatSpec with Matchers with ScalatestRouteTest with Routes {
   def actorRefFactory = system
-
-//  "test datetime" should "blabla " in {
-//    val date = ISODateTimeFormat.dateTimeNoMillis().withOffsetParsed()
-//    System.out.println("DATE: " + date)
-//    date should equal(date)
-//  }
 
   "Posting a new groceryList" should "blabla" in {
     val testGroceryList = """
@@ -26,7 +20,7 @@ class ControllerTest extends FlatSpec with Matchers with ScalatestRouteTest with
           {
             "name":"aardappels",
             "amount":2,
-            "unit":"stuks"
+            "unit":"pc"
           },
           {
             "name":"peanutbutter",
@@ -40,8 +34,8 @@ class ControllerTest extends FlatSpec with Matchers with ScalatestRouteTest with
 
     val mockedActor = TestProbe().ref
 
-    Post("/list", HttpEntity(ContentTypes.`application/json`, testGroceryList)) ~> groceriesRoute(mockedActor) ~> check {
-      responseAs[String] should include("Grocery list is being processed")
+    Post("/create", HttpEntity(ContentTypes.`application/json`, testGroceryList)) ~> groceriesRoute(mockedActor) ~> check {
+      responseAs[String] should include("Grocery list is being created")
       status should equal(spray.http.StatusCodes.Created)
     }
   }
